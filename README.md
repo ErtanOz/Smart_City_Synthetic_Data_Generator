@@ -2,6 +2,9 @@
 
 A comprehensive web application for generating realistic synthetic data for smart city and governance applications. This tool helps urban planners, researchers, and developers create test data for various smart city scenarios.
 
+<img width="1158" height="1018" alt="image" src="https://github.com/user-attachments/assets/9688d9af-9a79-4159-b1e8-91c0db0ef5d6" />
+
+
 ## Features
 
 ### Data Types
@@ -187,6 +190,7 @@ For issues or questions, please create an issue in the repository.
 ---
 
 Built with ❤️ for Smart Cities and Digital Governance
+
 ## What's New (2025-08-25)
 
 - Performance: Throttled UI updates, capped markers (1000) and table rows (100), heatmap data cap for smoother rendering.
