@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart City Synthetic Data Generator</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="loadingOverlay" aria-live="polite" class="loading-overlay" hidden>
+            <div class="loading-backdrop"></div>
+            <div class="loading-content" role="status" aria-busy="true">
+                <div class="spinner"></div>
+                <div class="loading-text" id="loadingText">Loading…</div>
+            </div>
+        </div>
+        <!-- Header -->
+        <header class="header" role="banner">
+            <div class="header-top">
+                <div class="brand">
+                    <span class="logo">🏙️</span>
+                    <h1 class="app-title">KUDOS Smart City Synthetic Data Generator</h1>
+                </div>
+                <div class="header-actions">
+                    <button id="themeToggle" class="btn btn-ghost" aria-pressed="false" title="Toggle dark mode">
+                        <span class="btn-icon" aria-hidden="true">🌙</span>
+                        <span class="btn-label">Theme</span>
+                    </button>
+                    <button id="compactToggle" class="btn btn-ghost" aria-pressed="false" title="Toggle compact mode">
+                        <span class="btn-icon" aria-hidden="true">🗜️</span>
+                        <span class="btn-label">Compact</span>
+                    </button>
+                </div>
+            </div>
+            <p class="subtitle">Generate realistic synthetic data for smart city and governance applications</p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Control Panel -->
+            <div class="control-panel" role="complementary" aria-label="Data configuration">
+                <div class="panel-header">
+                    <h2>Data Configuration</h2>
+                </div>
+                
+                <!-- Data Type Selection -->
+                <div class="form-group">
+                    <label for="dataType">Data Type</label>
+                    <select id="dataType" class="form-control">
+                        <option value="">Select Data Type</option>
+                        <option value="geo">Geographic/Location Data</option>
+                        <option value="traffic">Traffic & Transportation</option>
+                        <option value="social">Social/Demographic Data</option>
+                        <option value="financial">Financial/Economic Data</option>
+                        <option value="climate">Climate/Environmental Data</option>
+                        <option value="iot">IoT Sensor Data</option>
+                        <option value="transport">Public Transport Data</option>
+                        <option value="emergency">Emergency Services Data</option>
+                    </select>
+                </div>
+
+                
+
+                <!-- Dynamic Options Container -->
+                <div id="dynamicOptions" class="dynamic-options"></div>
+
+                <!-- Count Selection -->
+                <div class="form-group">
+                    <label for="dataCount">Number of Records</label>
+                    <input type="number" id="dataCount" class="form-control" value="100" min="1" max="10000">
+                </div>
+
+                <!-- Data Mode -->
+                <div class="form-group">
+                    <label>Data Mode</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="dataMode" value="static" checked>
+                            <span>Static (One-time generation)</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="dataMode" value="realtime">
+                            <span>Real-time Stream</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Stream Options -->
+                <div id="streamOptions" class="stream-options" style="display: none;">
+                    <div class="form-group">
+                        <label for="streamInterval">Update Interval (ms)</label>
+                        <input type="number" id="streamInterval" class="form-control" value="1000" min="100" max="10000">
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="button-group sticky-actions">
+                    <button id="generateBtn" class="btn btn-primary">
+                        <span class="btn-icon">⚡</span> Generate Data
+                    </button>
+                    <button id="stopStreamBtn" class="btn btn-danger" style="display: none;">
+                        <span class="btn-icon">⏹️</span> Stop Stream
+                    </button>
+                    <button id="clearBtn" class="btn btn-secondary">
+                        <span class="btn-icon">🗑️</span> Clear
+                    </button>
+                </div>
+
+                <!-- Export Options -->
+                <div class="export-section">
+                    <h3>Export Options</h3>
+                    <div class="button-group">
+                        <button id="exportJson" class="btn btn-export">
+                            <span class="btn-icon">📄</span> JSON
+                        </button>
+                        <button id="exportCsv" class="btn btn-export">
+                            <span class="btn-icon">📊</span> CSV
+                        </button>
+                        <button id="exportExcel" class="btn btn-export">
+                            <span class="btn-icon">📈</span> Excel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualization Panel -->
+            <div class="visualization-panel" role="region" aria-label="Data visualizations">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="map" aria-selected="true" role="tab">Map View</button>
+                    <button class="tab-btn" data-tab="chart" role="tab">Charts</button>
+                    <button class="tab-btn" data-tab="table" role="tab">Table View</button>
+                    <button class="tab-btn" data-tab="raw" role="tab">Raw Data</button>
+                </div>
+
+                <div class="tab-content">
+                    <!-- Map View -->
+                    <div id="mapView" class="tab-pane active">
+                        <div class="map-controls">
+                            <div class="btn-toggle-group" role="group" aria-label="Map mode">
+                                <button class="btn btn-toggle active" data-map-mode="points" aria-pressed="true" title="Points">● Points</button>
+                                <button class="btn btn-toggle" data-map-mode="heatmap" aria-pressed="false" title="Heatmap">🔥 Heatmap</button>
+                            </div>
+                        </div>
+                        <div id="map" aria-label="Map"></div>
+                    </div>
+
+                    <!-- Charts View -->
+                    <div id="chartView" class="tab-pane">
+                        <div class="chart-container">
+                            <canvas id="mainChart"></canvas>
+                        </div>
+                        <div class="chart-grid">
+                            <div class="chart-item">
+                                <canvas id="pieChart"></canvas>
+                            </div>
+                            <div class="chart-item">
+                                <canvas id="barChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Table View -->
+                    <div id="tableView" class="tab-pane">
+                        <div class="table-container">
+                            <table id="dataTable" class="data-table">
+                                <thead></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Raw Data View -->
+                    <div id="rawView" class="tab-pane">
+                        <pre id="rawData" class="raw-data"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Panel -->
+            <div class="stats-panel">
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="totalRecords">0</div>
+                        <div class="stat-label">Total Records</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🟢</div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="serverStatus">Unknown</div>
+                        <div class="stat-label" id="serverLatency">Latency: -</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="streamStatus">Idle</div>
+                        <div class="stat-label">Stream Status</div>
+                    </div>
+                </div>
+            <div class="stat-card">
+                <div class="stat-icon">💾</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="dataSize">0 KB</div>
+                    <div class="stat-label">Data Size</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🕒</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="lastUpdate">-</div>
+                    <div class="stat-label">Last Update</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Container -->
+        <div id="notifications" class="notifications"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
