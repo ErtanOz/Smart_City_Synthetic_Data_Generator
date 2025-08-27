@@ -2,7 +2,7 @@
 
 A comprehensive web application for generating realistic synthetic data for smart city and governance applications. This tool helps urban planners, researchers, and developers create test data for various smart city scenarios.
 
-<img width="1158" height="1018" alt="image" src="https://github.com/user-attachments/assets/9688d9af-9a79-4159-b1e8-91c0db0ef5d6" />
+<img width="949" height="1008" alt="image" src="https://github.com/user-attachments/assets/03ead626-c409-4e7e-952a-605aff5e3c79" />
 
 
 ## Features
@@ -204,3 +204,4 @@ Built with ❤️ for Smart Cities and Digital Governance
 Quick start
 - Install: `npm install`
 - Run: `npm start` then open `http://localhost:3001`
+
