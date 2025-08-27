@@ -191,6 +191,9 @@ For issues or questions, please create an issue in the repository.
 
 Built with ❤️ for Smart Cities and Digital Governance
 
+<img width="947" height="912" alt="image" src="https://github.com/user-attachments/assets/298fe463-1474-4225-8684-91224d5f6f53" />
+
+
 ## What's New (2025-08-25)
 
 - Performance: Throttled UI updates, capped markers (1000) and table rows (100), heatmap data cap for smoother rendering.
@@ -204,4 +207,5 @@ Built with ❤️ for Smart Cities and Digital Governance
 Quick start
 - Install: `npm install`
 - Run: `npm start` then open `http://localhost:3001`
+
 
